@@ -1,0 +1,17 @@
+version: '2'
+services:
+  mysql:
+    build: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+  app:
+    build: ruby
+    volumes:
+      - ./../:/rspec_sample
+    ports: 
+      - "3088:3088"
+    depends_on:
+      - mysql
+    command: ["ruby", "-v"]
