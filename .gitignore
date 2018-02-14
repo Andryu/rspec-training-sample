@@ -1,8 +1,8 @@
-config/secrets.yml
 *.gem
 *.rbc
 *.log
 /.config
+/config/secrets.yml
 /coverage/
 /InstalledFiles
 /pkg/
