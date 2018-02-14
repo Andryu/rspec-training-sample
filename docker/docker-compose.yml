@@ -15,21 +15,25 @@ services:
     volumes_from:
       - datastore
     networks:
-      - default
+      - default 
   app:
     build: ruby
-    tty: true
+    environment:
+      - SAMPLE_DOCKER_DB_HOST=mysql
     volumes:
       - ./../:/app
     volumes_from:
       - datastore
     networks:
-      - default
+      - default 
     ports: 
       - "3088:3088"
+    links:
+      - mysql 
     depends_on:
       - mysql
     command: ["bundle", "exec", "rails", "s", "-b", "0.0.0.0", "-p", "3088"] 
+    tty: true
 
 volumes:
   mysql-data:
