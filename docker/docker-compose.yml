@@ -1,17 +1,40 @@
 version: '2'
 services:
+  datastore:
+    image: busybox
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - bundle_install:/app/vendor/bundle
+      - bundle:/app/.bundle
   mysql:
     build: mysql
     ports:
       - "3306:3306"
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    volumes_from:
+      - datastore
+    networks:
+      - default
   app:
     build: ruby
+    tty: true
     volumes:
-      - ./../:/rspec_sample
+      - ./../:/app
+    volumes_from:
+      - datastore
+    networks:
+      - default
     ports: 
       - "3088:3088"
     depends_on:
       - mysql
-    command: ["ruby", "-v"]
+    command: ["bundle", "exec", "rails", "s", "-b", "0.0.0.0", "-p", "3088"] 
+
+volumes:
+  mysql-data:
+    driver: local
+  bundle_install:
+    driver: local
+  bundle:
+    driver: local
